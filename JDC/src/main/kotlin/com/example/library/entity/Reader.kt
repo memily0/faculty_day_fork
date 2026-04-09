@@ -14,11 +14,21 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "readers")
 data class Reader(
-     @Id
-     @GeneratedValue(strategy = GenerationType.IDENTITY)
-     val id : Long? = null,
-     @Column(nullable = false)
-     val name : String,
-     @Column(nullable = false, unique = true)
-     val email: String = ""
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
+
+    @Column(nullable = false)
+    val name: String,
+
+    @Column(nullable = false, unique = true)
+    val email: String,
+
+    @ManyToMany
+    @JoinTable(
+        name = "reader_books",
+        joinColumns = [JoinColumn(name = "reader_id")],
+        inverseJoinColumns = [JoinColumn(name = "book_id")]
+    )
+    val books: MutableList<Book> = mutableListOf()
 )

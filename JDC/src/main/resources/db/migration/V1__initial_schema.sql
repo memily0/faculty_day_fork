@@ -19,6 +19,7 @@ CREATE TABLE books (
     genre_id BIGINT REFERENCES genres(id)
 );
 
+
 -- Индексы
 CREATE INDEX idx_books_author ON books(author_id);
 CREATE INDEX idx_books_genre ON books(genre_id);

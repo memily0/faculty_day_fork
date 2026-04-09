@@ -3,9 +3,11 @@ package com.example.library.service
 import com.example.library.entity.Author
 import com.example.library.entity.Book
 import com.example.library.entity.Genre
+import com.example.library.entity.Reader
 import com.example.library.repository.AuthorRepository
 import com.example.library.repository.BookRepository
 import com.example.library.repository.GenreRepository
+import com.example.library.repository.ReaderRepository
 import jakarta.persistence.EntityNotFoundException
 import org.hibernate.Hibernate
 import org.springframework.data.domain.Page
@@ -18,7 +20,8 @@ import org.springframework.transaction.annotation.Transactional
 class LibraryService(
     private val authorRepository: AuthorRepository,
     private val bookRepository: BookRepository,
-    private val genreRepository: GenreRepository
+    private val genreRepository: GenreRepository,
+    private val readerRepository: ReaderRepository
 ) {
     
     // ==================== АВТОРЫ ====================
@@ -105,7 +108,26 @@ class LibraryService(
     @Transactional(readOnly = true)
     fun getAllGenres(): List<Genre> {
         return genreRepository.findAll()
-        return emptyList()
+    }
+
+    @Transactional(readOnly = true)
+    fun getAllReaders(): List<Map<String, Any?>> {
+        return readerRepository.findAllWithBooksFetched().map { reader ->
+            mapOf(
+                "id" to reader.id,
+                "name" to reader.name,
+                "email" to reader.email,
+                "books" to reader.books.map { book ->
+                    mapOf(
+                        "id" to book.id,
+                        "title" to book.title,
+                        "isbn" to book.isbn,
+                        "author" to book.author?.name,
+                        "genre" to book.genre?.name
+                    )
+                }
+            )
+        }
     }
     
     @Transactional(readOnly = true)

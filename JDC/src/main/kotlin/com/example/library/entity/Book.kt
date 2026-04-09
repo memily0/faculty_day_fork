@@ -8,15 +8,18 @@ data class Book(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-    
+
     val title: String,
     val isbn: String,
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     val author: Author? = null,
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "genre_id")
-    val genre: Genre? = null
+    val genre: Genre? = null,
+
+    @ManyToMany(mappedBy = "books")
+    val readers: MutableList<Reader> = mutableListOf()
 )

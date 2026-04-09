@@ -15,79 +15,89 @@ import org.springframework.web.bind.annotation.*
 class LibraryController(
     private val libraryService: LibraryService
 ) {
-    
+
     // ==================== АВТОРЫ ====================
-    
+
     @GetMapping("/authors")
     fun getAllAuthors(): ResponseEntity<List<Map<String, Any?>>> {
         return ResponseEntity.ok(libraryService.getAllAuthorsWithBooksCountNPlus1())
     }
-    
+
     @GetMapping("/authors/{id}")
     fun getAuthor(@PathVariable id: Long): ResponseEntity<Map<String, Any?>> {
         return libraryService.getAuthorWithBooksFetched(id)
             ?.let { ResponseEntity.ok(it) }
             ?: ResponseEntity.notFound().build()
     }
-    
+
     @PostMapping("/authors")
     fun createAuthor(@RequestBody @Valid request: CreateAuthorRequest): ResponseEntity<Map<String, Any?>> {
         val author = libraryService.createAuthor(request.name)
         return ResponseEntity.ok(mapOf("id" to author.id, "name" to author.name))
     }
-    
+
     // ==================== КНИГИ ====================
-    
+
     @GetMapping("/books")
     fun getBooks(
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "20") size: Int
     ): ResponseEntity<Map<String, Any?>> {
         val booksPage: Page<Book> = libraryService.getBooksPage(page, size)
-        return ResponseEntity.ok(mapOf(
-            "content" to booksPage.content.map { book ->
-                mapOf(
-                    "id" to book.id,
-                    "title" to book.title,
-                    "isbn" to book.isbn,
-                    "author" to book.author?.name,
+        return ResponseEntity.ok(
+            mapOf(
+                "content" to booksPage.content.map { book ->
+                    mapOf(
+                        "id" to book.id,
+                        "title" to book.title,
+                        "isbn" to book.isbn,
+                        "author" to book.author?.name,
 //                    "genre" to book.genre?.name
-                )
-            },
-            "totalPages" to booksPage.totalPages,
-            "totalElements" to booksPage.totalElements,
-            "currentPage" to booksPage.number,
-            "size" to booksPage.size
-        ))
+                    )
+                },
+                "totalPages" to booksPage.totalPages,
+                "totalElements" to booksPage.totalElements,
+                "currentPage" to booksPage.number,
+                "size" to booksPage.size
+            )
+        )
     }
-    
+
     @GetMapping("/books/search")
     fun searchBooks(@RequestParam title: String): ResponseEntity<List<Map<String, Any?>>> {
         return ResponseEntity.ok(libraryService.searchBooksByTitle(title))
     }
-    
+
     @PostMapping("/books")
     fun createBook(@RequestBody @Valid request: CreateBookRequest): ResponseEntity<Map<String, Any?>> {
         val book = libraryService.createBook(request.title, request.isbn, request.authorId, request.genreId)
-        return ResponseEntity.ok(mapOf(
-            "id" to book.id,
-            "title" to book.title,
-            "isbn" to book.isbn
-        ))
+        return ResponseEntity.ok(
+            mapOf(
+                "id" to book.id,
+                "title" to book.title,
+                "isbn" to book.isbn
+            )
+        )
     }
-    
+
     // ==================== ЖАНРЫ ====================
-    
+
     // ========================================================================
     // ЗАДАНИЕ 1: Добавить endpoint для получения жанров
     // ========================================================================
     // ИНСТРУКЦИЯ: Раскомментируй метод ниже
-    
+
     // TODO: Раскомментировать когда будешь делать задание 1
     @GetMapping("/genres")
     fun getAllGenres(): ResponseEntity<List<Genre>> {
         return ResponseEntity.ok(libraryService.getAllGenres())
     }
+
+    @GetMapping("/readers")
+    fun getAllReaders(): ResponseEntity<List<Map<String, Any?>>> {
+        return ResponseEntity.ok(libraryService.getAllReaders())
+    }
+
 }
 
 // ==================== DTO ====================
@@ -110,3 +120,4 @@ data class CreateBookRequest(
     @field:NotNull(message = "Genre ID is required")
     val genreId: Long
 )
+
