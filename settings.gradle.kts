@@ -28,4 +28,5 @@ include("lesson13")
 include("lesson14")
 include("spring_1")
 include("PostgreSQL")
-include("JDC")
+include("JPA")
+

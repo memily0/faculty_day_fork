@@ -4,8 +4,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
 
 @Component
-@ConfigurationProperties(prefix = "app.nigga-service")
-class NiggaServiceConfig {
+@ConfigurationProperties(prefix = "app.pet-service")
+class PetServiceConfig {
     var forbiddenNames: List<String> = listOf()
-    var maxNiggas: Int = 10
+    var maxPets: Int = 10
 }

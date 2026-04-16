@@ -94,15 +94,23 @@ class LibraryService(
     fun createAuthor(name: String): Author {
         return authorRepository.save(Author(name = name))
     }
-    
+
     @Transactional
     fun createBook(title: String, isbn: String, authorId: Long, genreId: Long): Book {
         val author = authorRepository.findById(authorId)
             .orElseThrow { EntityNotFoundException("Author not found with id: $authorId") }
+
         val genre = genreRepository.findById(genreId)
             .orElseThrow { EntityNotFoundException("Genre not found with id: $genreId") }
-        
-        return bookRepository.save(Book(title = title, isbn = isbn, author = author))
+
+        return bookRepository.save(
+            Book(
+                title = title,
+                isbn = isbn,
+                author = author,
+                genre = genre
+            )
+        )
     }
 
     @Transactional(readOnly = true)

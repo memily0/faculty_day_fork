@@ -1,8 +1,6 @@
 app:
-  nigga-service:
-    forbidden-niggas:
-      - "Джеймс Корутинович"
-      - "Мэттью Спрингов"
-      - "Принси Градлович"
-      - "Дилан Аннотациевский"
-    max-niggas: 10
+  pet-service:
+    forbidden-names:
+      - "Coroutine"
+      - "Annotation"
+    max-pets: 10
